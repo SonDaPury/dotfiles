@@ -1,0 +1,10 @@
+--- dwm.c
++++ dwm.c
+@@ -2152,6 +2159,7 @@ main(int argc, char *argv[])
+ 	checkotherwm();
+ 	setup();
+ 	scan();
++	runAutostart();
+ 	run();
+ 	cleanup();
+ 	XCloseDisplay(dpy);
