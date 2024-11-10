@@ -1,11 +1,19 @@
 return {
   -- colorschemes
+  -- {
+  --   "craftzdog/solarized-osaka.nvim",
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = function()
+  --     vim.cmd [[colorscheme solarized-osaka]]
+  --   end
+  -- },
   {
-    "craftzdog/solarized-osaka.nvim",
+    "folke/tokyonight.nvim",
     lazy = false,
     priority = 1000,
     config = function()
-      vim.cmd [[colorscheme solarized-osaka]]
+      vim.cmd [[colorscheme tokyonight-night]]
     end
   },
 
@@ -35,46 +43,56 @@ return {
   --   }
   -- }
   {
-		"nvim-treesitter/nvim-treesitter",
-		build = ":TSUpdate",
-		opts = {
-			ensure_installed = {
-				"lua",
-				"vim",
-				"vimdoc",
-				"javascript",
-				"typescript",
-				"html",
-				"json",
-				"markdown",
-				"markdown_inline",
-				"css",
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    opts = {
+      ensure_installed = {
+        "lua",
+        "vim",
+        "vimdoc",
+        "javascript",
+        "typescript",
+        "html",
+        "json",
+        "markdown",
+        "markdown_inline",
+        "css",
         "tsx",
         "sql",
         "scss",
         "bash",
         "nginx",
-			},
-			auto_install = true,
-			highlight = {
-				enable = true,
-			},
-			indent = {
-				enable = true,
-			},
-			autotag = {
-				enable = true,
-			},
-			context_commentstring = {
-				enable = true,
-				enable_autocmd = false,
-			},
-		},
-		event = { "BufReadPost", "BufNewFile" },
-		config = function(_, opts)
-			require("nvim-treesitter.configs").setup(opts)
-			local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-			parser_config.tsx.filetype_to_parsername = { "javascript", "typescript.tsx" }
-		end,
-	},
+      },
+      auto_install = true,
+      highlight = {
+        enable = true,
+      },
+      indent = {
+        enable = true,
+      },
+      autotag = {
+        enable = true,
+      },
+      context_commentstring = {
+        enable = true,
+        enable_autocmd = false,
+      },
+    },
+    event = { "BufReadPost", "BufNewFile" },
+    config = function(_, opts)
+      require("nvim-treesitter.configs").setup(opts)
+      local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+      parser_config.tsx.filetype_to_parsername = { "javascript", "typescript.tsx" }
+    end,
+  },
+
+
+  -- color highlight
+  {
+    'brenoprata10/nvim-highlight-colors',
+    opts = {
+      render = "virtual",
+    }
+  },
+
 }
