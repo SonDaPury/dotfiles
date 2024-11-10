@@ -1,11 +1,24 @@
 return {
-	-- Auto pair
+	---------------------------------------------------------------------------------------------------------------------------------------
+	-- autopair
 	{
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
 		config = true,
 	},
 
+	---------------------------------------------------------------------------------------------------------------------------------------
+	-- autotag
+	{
+		"windwp/nvim-ts-autotag",
+		opts = {
+			enable_close = true, -- Auto close tags
+			enable_rename = true, -- Auto rename pairs of tags
+			enable_close_on_slash = false,
+		},
+	},
+
+	---------------------------------------------------------------------------------------------------------------------------------------
 	-- Telescope
 	{
 		"nvim-telescope/telescope.nvim",
@@ -53,6 +66,7 @@ return {
 		end,
 	},
 
+	---------------------------------------------------------------------------------------------------------------------------------------
 	-- Tmux
 	{
 		"aserowy/tmux.nvim",
@@ -61,12 +75,14 @@ return {
 		end,
 	},
 
+	---------------------------------------------------------------------------------------------------------------------------------------
 	-- Comment.nvim
 	{
 		"numToStr/Comment.nvim",
 		config = true,
 	},
 
+	---------------------------------------------------------------------------------------------------------------------------------------
 	-- Bufremove
 	{
 		"echasnovski/mini.bufremove",
@@ -78,50 +94,40 @@ return {
 		end,
 	},
 
-	-- Trouble nvim
-	{
-		"folke/trouble.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		opts = {
-			height = 8,
-		},
-		keys = {
-			{
-				"<leader>xx",
-				"<cmd>TroubleToggle workspace_diagnostics<cr>",
-				mode = { "n" },
-				desc = "Toogle workspace diagnostics",
-			},
-		},
-	},
-
-	-- Copilot
+	---------------------------------------------------------------------------------------------------------------------------------------
+	-- copilot
 	{
 		"zbirenbaum/copilot.lua",
 		cmd = "Copilot",
 		event = "InsertEnter",
 		build = ":Copilot auth",
 		opts = {
-			panel = { enabled = false },
-			auto_refresh = true,
-			suggestion = {
+			panel = {
 				enabled = false,
-				auto_trigger = true,
 			},
-			filetypes = {
-				markdown = true,
-				help = true,
+			suggestion = {
+				enabled = true,
+				auto_trigger = false,
+				hide_during_completion = true,
+				debounce = 75,
+				keymap = {
+					accept = "<M-l>",
+					accept_word = false,
+					accept_line = false,
+					next = "<M-]>",
+					prev = "<M-[>",
+					dismiss = "<C-]>",
+				},
 			},
 		},
-		config = function(_, opts)
-			require("copilot").setup(opts)
-		end,
 	},
 
-	-- {
-	-- 	"zbirenbaum/copilot-cmp",
-	-- 	config = function()
-	-- 		require("copilot_cmp").setup()
-	-- 	end,
-	-- },
+	-------------------------------------------------------------------------------------------------------------------------------------
+	-- gitsigns
+	{
+		"lewis6991/gitsigns.nvim",
+		opts = {
+			current_line_blame = true,
+		},
+	},
 }

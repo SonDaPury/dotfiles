@@ -1,251 +1,180 @@
 return {
-	-- Neotree
-	{
-		"nvim-neo-tree/neo-tree.nvim",
-		branch = "v3.x",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"nvim-tree/nvim-web-devicons",
-			"MunifTanjim/nui.nvim",
-			{
-				"s1n7ax/nvim-window-picker",
-				version = "2.*",
-				config = function()
-					require("window-picker").setup({
-						filter_rules = {
-							include_current_win = false,
-							autoselect_one = true,
-							bo = {
-								filetype = { "neo-tree", "neo-tree-popup", "notify" },
-								buftype = { "terminal", "quickfix" },
-							},
-						},
-					})
-				end,
-			},
-		},
-		keys = {
-			{ "<C-n>", "<cmd>Neotree toggle<CR>", desc = "Neotree Toggle" },
-			{ "<leader>e", "<cmd>Neotree reveal<cr>", desc = "Neotree Reveal" },
-		},
-		config = function()
-			-- Set icon for dianogstics
-			vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError" })
-			vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn" })
-			vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo" })
-			vim.fn.sign_define("DiagnosticSignHint", { text = "󰌵", texthl = "DiagnosticSignHint" })
+  --------------------------------------------------------------------------------------------------------------------------
+  -- neotree
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+      "MunifTanjim/nui.nvim",
+    },
+    keys = {
+      { "<C-n>",     "<cmd>Neotree toggle<CR>", desc = "Neotree Toggle" },
+      { "<leader>e", "<cmd>Neotree reveal<cr>", desc = "Neotree Reveal" },
+    },
+    config = function()
+      vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError" })
+      vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn" })
+      vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo" })
+      vim.fn.sign_define("DiagnosticSignHint", { text = "󰌵", texthl = "DiagnosticSignHint" })
 
-			-- Setup neotree
-			require("neo-tree").setup({
-				close_if_last_window = true,
-				filesystem = {
-					filtered_items = {
-						hide_dotfiles = false,
-						hide_gitignored = false,
-						hide_hidden = false,
-					},
-				},
-			})
-		end,
-	},
+      require("neo-tree").setup({
+        filesystem = {
+          filtered_items = {
+            hide_dotfiles = false,
+            hide_gitignored = false,
+            hide_hidden = false,
+          },
+        },
+      })
+    end,
+  },
 
-	-- Lua line
-	{
-		"nvim-lualine/lualine.nvim",
-		config = function()
-			require("lualine").setup()
-		end,
-	},
+  ----------------------------------------------------------------------------------------------------------------------
+  -- status line
+  {
+    "nvim-lualine/lualine.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      local colors = {
+        blue = "#80a0ff",
+        cyan = "#79dac8",
+        black = "#080808",
+        white = "#c6c6c6",
+        red = "#ff5189",
+        violet = "#d183e8",
+        grey = "#303030",
+      }
 
-	-- Bufferline
-	{
-		"akinsho/bufferline.nvim",
-		version = "*",
-		opts = {
-			options = {
-				mode = "buffers",
-				-- separator_style = "slant",
-				themable = true,
-				show_buffer_close_icons = false,
-				diagnostics = "nvim_lsp",
-				diagnostics_indicator = function(count, level, diagnostics_dict, context)
-					local icon = level:match("error") and " " or ""
-					return " " .. icon
-				end,
-				indicator = {
-					style = "icon",
-				},
-				modified_icon = "●",
-				close_icon = "",
-				left_trunc_marker = "",
-				right_trunc_marker = "",
-				tab_size = 20,
-				diagnostics_update_in_insert = true,
-				-- icon = "▎", -- this should be omitted if indicator style is not 'icon'
-			},
-			highlights = {
-				buffer_selected = {
-					fg = "#c0e4eb",
-					bold = true,
-				},
-				warning = {
-					fg = "#d9ca00",
-					sp = "#d9ca00",
-					bg = "#27283d",
-				},
-				warning_visible = {
-					fg = "#d9ca00",
-					bg = "#27283d",
-				},
-				warning_selected = {
-					fg = "#d9ca00",
-					sp = "#d9ca00",
-					bold = true,
-					italic = true,
-				},
-				warning_diagnostic = {
-					fg = "#d9ca00",
-					sp = "#d9ca00",
-					bg = "#27283d",
-				},
-				warning_diagnostic_visible = {
-					fg = "#d9ca00",
-					bg = "#27283d",
-				},
-				warning_diagnostic_selected = {
-					fg = "#d9ca00",
-					bold = true,
-					italic = true,
-				},
-				error = {
-					fg = "#cf1114",
-					bg = "#27283d",
-					sp = "#cf1114",
-				},
-				error_visible = {
-					fg = "#cf1114",
-					bg = "#27283d",
-				},
-				error_selected = {
-					fg = "#cf1114",
-					sp = "#cf1114",
-					bold = true,
-					italic = true,
-				},
-				error_diagnostic = {
-					fg = "#cf1114",
-					bg = "#27283d",
-					sp = "#cf1114",
-				},
-				error_diagnostic_visible = {
-					fg = "#cf1114",
-					bg = "#27283d",
-				},
-				error_diagnostic_selected = {
-					fg = "#cf1114",
-					sp = "#cf1114",
-					bold = true,
-					italic = true,
-				},
-				hint = {
-					bg = "#27283d",
-				},
-				hint_diagnostic = {
-					bg = "#27283d",
-				},
-				info = {
-					bg = "#27283d",
-				},
-				info_visible = {
-					bg = "#27283d",
-				},
-				info_diagnostic = {
-					bg = "#27283d",
-				},
-				info_diagnostic_visible = {
-					bg = "#27283d",
-				},
+      local bubbles_theme = {
+        normal = {
+          a = { fg = colors.black, bg = colors.violet },
+          b = { fg = colors.white, bg = colors.grey },
+          c = { fg = colors.white },
+        },
 
-				background = {
-					bg = "#27283d",
-					fg = "#6d6e78",
-				},
-				fill = {
-					bg = "#27283d",
-				},
-				separator = {
-					bg = "#27283d",
-				},
-				separator_selected = {
-					fg = "#3640f5",
-					bg = "#3640f5",
-				},
-				indicator_selected = {
-					fg = "#3366d6",
-					-- bg = "#3640f5",
-				},
-			},
-		},
-	},
+        insert = { a = { fg = colors.black, bg = colors.blue } },
+        visual = { a = { fg = colors.black, bg = colors.cyan } },
+        replace = { a = { fg = colors.black, bg = colors.red } },
 
-	-- Auto close tag
-	{
-		"windwp/nvim-ts-autotag",
-		config = function()
-			require("nvim-ts-autotag").setup()
-		end,
-	},
+        inactive = {
+          a = { fg = colors.white, bg = colors.black },
+          b = { fg = colors.white, bg = colors.black },
+          c = { fg = colors.white },
+        },
+      }
 
-	-- Indent
-	{
-		"echasnovski/mini.indentscope",
-		version = false,
-		opts = {
-			symbol = "▏",
-			-- symbol = "│",
-			-- symbol = "╎",
-			options = { try_as_border = true },
-		},
-	},
+      require("lualine").setup({
+        options = {
+          theme = bubbles_theme,
+          component_separators = "",
+          section_separators = { left = "", right = "" },
+        },
+        sections = {
+          lualine_a = { { "mode", separator = { left = "" }, right_padding = 2 } },
+          lualine_b = { "filename", "branch" },
+          lualine_c = {
+            "%=", --[[ add your center compoentnts here in place of this comment ]]
+          },
+          lualine_x = {},
+          lualine_y = { "filetype", "progress" },
+          lualine_z = {
+            { "location", separator = { right = "" }, left_padding = 2 },
+          },
+        },
+        inactive_sections = {
+          lualine_a = { "filename" },
+          lualine_b = {},
+          lualine_c = {},
+          lualine_x = {},
+          lualine_y = {},
+          lualine_z = { "location" },
+        },
+        tabline = {},
+        extensions = {},
+      })
+    end,
+  },
 
-	{
-		"lukas-reineke/indent-blankline.nvim",
-		-- event = "LazyFile",
-		opts = {
-			indent = {
-				char = "▏",
-				tab_char = "▏",
-			},
-			scope = { enabled = false },
-		},
-		main = "ibl",
-	},
-	{
-		"rcarriga/nvim-notify",
-		config = function()
-			vim.notify = require("notify")
-			-- notify.setup()
-		end,
-	},
+  ------------------------------------------------------------------------------------------------------------------------
+  -- bufferline
+  {
+    "akinsho/bufferline.nvim",
+    version = "*",
+    dependencies = "nvim-tree/nvim-web-devicons",
+    config = function()
+      require("bufferline").setup({
+        options = {
+          themable = true,
+          diagnostics = "nvim_lsp",
+          update_in_insert = true,
+          diagnostics_indicator = function(count, level, diagnostics_dict, context)
+            local s = " "
+            for e, n in pairs(diagnostics_dict) do
+              local sym = e == "error" and " " or (e == "warning" and " " or " ")
+              s = s .. n .. sym
+            end
+            return s
+          end,
+        },
+      })
+    end,
+  },
 
-	-- Trouble nvim
-	{
-	  "folke/trouble.nvim",
-	  opts = {
-	    position = "bottom",
-	    auto_open = false,
-	    auto_close = false,
-	    auto_preview = true,
-	    height = 5,
-	  },
-	},
+  --------------------------------------------------------------------------------------------------------------------------------
+  -- Indent
+  {
+    "echasnovski/mini.indentscope",
+    version = false,
+    opts = {
+      symbol = "▏",
+      -- symbol = "│",
+      -- symbol = "╎",
+      options = { try_as_border = true },
+    },
+  },
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    -- event = "LazyFile",
+    opts = {
+      indent = {
+        char = "▏",
+        tab_char = "▏",
+      },
+      scope = { enabled = false },
+    },
+    main = "ibl",
+  },
 
-	-- Dressing
-	{
-		"stevearc/dressing.nvim",
-		opts = {},
-		config = function(_, opts)
-			require("dressing").setup(opts)
-		end,
-	},
+  ------------------------------------------------------------------------------------------------------------------------------------------
+  -- trouble panel
+  {
+    "folke/trouble.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {
+      height = 8,
+    },
+    cmd = "Trouble",
+    keys = {
+      {
+        "<leader>xx",
+        "<cmd>Trouble diagnostics toggle<cr>",
+        mode = { "n" },
+        desc = "Toogle workspace diagnostics",
+      },
+    },
+  },
+
+  ------------------------------------------------------------------------------------------------------------------------------------------
+  -- lsp saga
+  {
+    'nvimdev/lspsaga.nvim',
+    opts = {
+      ui = {
+        code_action = ''
+      }
+    }
+
+  },
 }

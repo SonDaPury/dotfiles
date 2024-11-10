@@ -1,47 +1,44 @@
 return {
-	-- {
-	-- 	"ellisonleao/gruvbox.nvim",
-	-- 	priority = 1000,
-	-- 	opts = {
-	-- 		bold = false,
-	-- 		italic = {
-	-- 			strings = false,
-	-- 			emphasis = false,
-	-- 			comments = false,
-	-- 			operators = false,
-	-- 			folds = false,
-	-- 		},
-	-- 	},
-	-- 	config = function(_, opts)
-	-- 		require("gruvbox").setup(opts)
-	-- 		vim.cmd("colorscheme gruvbox")
-	-- 	end,
-	-- },
-	-- {
-	-- 	"craftzdog/solarized-osaka.nvim",
-	-- 	lazy = false,
-	-- 	priority = 1000,
-	-- 	opts = {},
-	-- 	config = function()
-	-- 		vim.cmd([[colorscheme solarized-osaka]])
-	-- 	end,
-	-- },
-	{
-		"joshdick/onedark.vim",
-		config = function()
-			vim.cmd([[
-      colorscheme onedark
-      ]])
-		end,
-	},
+  -- colorschemes
+  {
+    "craftzdog/solarized-osaka.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.cmd [[colorscheme solarized-osaka]]
+    end
+  },
 
-	-- Treesitter
-	{
+  -- treesitter
+  -- {
+  --   'nvim-treesitter/nvim-treesitter',
+  --   build = ":TSUpdate",
+  --   lazy = vim.fn.argc(-1) == 0,
+  --   cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
+  --   opts = {
+  --     ensure_installed = { "lua", "javascript", "typescript", "bash", "css", "json", "vim", "nginx", "scss", "sql", "tsx" },
+  --     sync_install = true,
+  --     auto_install = true,
+  --     highlight = {
+  --       enable = true
+  --     },
+  --     indent = {
+  --       enable = true,
+  --     },
+  --     autotag = {
+  --       enable = true,
+  --     },
+  --     context_commentstring = {
+  --       enable = true,
+  --       enable_autocmd = false,
+  --     },
+  --   }
+  -- }
+  {
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 		opts = {
 			ensure_installed = {
-				"c_sharp",
 				"lua",
 				"vim",
 				"vimdoc",
@@ -51,10 +48,12 @@ return {
 				"json",
 				"markdown",
 				"markdown_inline",
-				"java",
 				"css",
-				"cpp",
-				"c",
+        "tsx",
+        "sql",
+        "scss",
+        "bash",
+        "nginx",
 			},
 			auto_install = true,
 			highlight = {
