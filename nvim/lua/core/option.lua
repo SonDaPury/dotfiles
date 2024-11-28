@@ -37,3 +37,10 @@ opt.splitbelow = true
 opt.iskeyword:append("-")
 
 vim.opt.wildoptions = "pum"
+
+-- folding
+vim.o.foldcolumn = '1'
+vim.o.foldlevel = 99
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true
+vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
