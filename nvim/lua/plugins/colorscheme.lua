@@ -1,17 +1,25 @@
 return {
   {
-    "craftzdog/solarized-osaka.nvim",
-    lazy = false,
-    priority = 1000,
-    -- config = function()
-    --   vim.cmd [[colorscheme solarized-osaka]]
-    -- end
-  },
-
-  {
-    "LazyVim/LazyVim",
+    "folke/tokyonight.nvim",
     opts = {
-      colorscheme = "solarized-osaka",
+      transparent = true,
+      styles = {
+        sidebars = "transparent",
+        floats = "transparent",
+      },
     },
   },
+  -- {
+  --   "scottmckendry/cyberdream.nvim",
+  --   lazy = false,
+  --   priority = 1000,
+  --   opts = {
+  --     transparent = true,
+  --     italic_comments = true,
+  --   },
+  --   config = function(opts)
+  --     require("cyberdream").setup(opts)
+  --     vim.cmd("colorscheme cyberdream")
+  --   end,
+  -- },
 }

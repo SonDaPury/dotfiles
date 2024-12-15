@@ -1,5 +1,5 @@
 return {
-  -- Telescope
+  -- Telescrope
   {
     "nvim-telescope/telescope.nvim",
     keys = {
@@ -22,26 +22,26 @@ return {
       { "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "list open buffers in current neovim instance" },
       { "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "list available help tags" },
     },
-    -- config = function()
-    --   local telescopeConfig = require("telescope.config")
-    --   local telescope = require("telescope")
-    --   local vimgrep_arguments = { unpack(telescopeConfig.values.vimgrep_arguments) }
-    --   table.insert(vimgrep_arguments, "--hidden")
-    --   table.insert(vimgrep_arguments, "--glob")
-    --   table.insert(vimgrep_arguments, "!**/.git/*")
-    --
-    --   require("telescope").setup({
-    --     defaults = {
-    --       vimgrep_arguments = vimgrep_arguments,
-    --     },
-    --     pickers = {
-    --       find_files = {
-    --         find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
-    --       },
-    --     },
-    --     extensions = {},
-    --   })
-    -- end,
+    config = function()
+      local telescopeConfig = require("telescope.config")
+      local telescope = require("telescope")
+      local vimgrep_arguments = { unpack(telescopeConfig.values.vimgrep_arguments) }
+      table.insert(vimgrep_arguments, "--hidden")
+      table.insert(vimgrep_arguments, "--glob")
+      table.insert(vimgrep_arguments, "!**/.git/*")
+
+      telescope.setup({
+        defaults = {
+          vimgrep_arguments = vimgrep_arguments,
+        },
+        pickers = {
+          find_files = {
+            find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
+          },
+        },
+        extensions = {},
+      })
+    end,
   },
 
   -- Neotree
@@ -51,32 +51,8 @@ return {
       { "<C-n>", "<cmd>Neotree toggle<CR>", desc = "Neotree Toggle" },
       { "<leader>e", "<cmd>Neotree reveal<cr>", desc = "Neotree Reveal" },
     },
-    config = function()
-      vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError" })
-      vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn" })
-      vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo" })
-      vim.fn.sign_define("DiagnosticSignHint", { text = "󰌵", texthl = "DiagnosticSignHint" })
-
-      require("neo-tree").setup({
-        filesystem = {
-          filtered_items = {
-            hide_dotfiles = false,
-            hide_gitignored = false,
-            hide_hidden = false,
-          },
-        },
-      })
-    end,
   },
 
-  {
-    "neovim/nvim-lspconfig",
-    opts = {
-      inlay_hints = { enabled = false },
-    },
-  },
-
-  -------------------------------------------------------------------------------------------------------------------------------------
   -- gitsigns
   {
     "lewis6991/gitsigns.nvim",
@@ -85,7 +61,6 @@ return {
     },
   },
 
-  ---------------------------------------------------------------------
   -- liveserver
   {
     "barrett-ruth/live-server.nvim",
@@ -93,5 +68,44 @@ return {
     config = function()
       require("live-server").setup()
     end,
+  },
+
+  -- blink cmp
+  {
+    "saghen/blink.cmp",
+    opts = {
+      completion = {
+        ghost_text = {
+          enabled = false,
+        },
+      },
+    },
+  },
+
+  -- disable inlay_hints
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      inlay_hints = { enabled = false },
+    },
+  },
+
+  -- tmux nvim
+  {
+    "christoomey/vim-tmux-navigator",
+    cmd = {
+      "TmuxNavigateLeft",
+      "TmuxNavigateDown",
+      "TmuxNavigateUp",
+      "TmuxNavigateRight",
+      "TmuxNavigatePrevious",
+    },
+    keys = {
+      { "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>" },
+      { "<c-j>", "<cmd><C-U>TmuxNavigateDown<cr>" },
+      { "<c-k>", "<cmd><C-U>TmuxNavigateUp<cr>" },
+      { "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
+      { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
+    },
   },
 }
