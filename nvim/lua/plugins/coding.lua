@@ -1,96 +1,28 @@
 return {
-  -- Telescrope
+  -- colorscheme
   {
-    "nvim-telescope/telescope.nvim",
-    keys = {
-      {
-        "<C-p>",
-        "<cmd>Telescope find_files<cr>",
-        desc = "find files within current working directory, respects .gitignore",
-        mode = { "n", "i" },
-      },
-      {
-        "<leader>fs",
-        "<cmd>Telescope live_grep<cr>",
-        desc = "find string in current working directory as you type",
-      },
-      {
-        "<leader>fc",
-        "<cmd>Telescope grep_string<cr>",
-        desc = "find string under cursor in current working directory",
-      },
-      { "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "list open buffers in current neovim instance" },
-      { "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "list available help tags" },
-    },
+    "olimorris/onedarkpro.nvim",
+    priority = 1000, -- Ensure it loads first
+  },
+  {
+    "craftzdog/solarized-osaka.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {},
+  },
+  {
+    "neanias/everforest-nvim",
+    version = false,
+    lazy = false,
+    priority = 1000,
     config = function()
-      local telescopeConfig = require("telescope.config")
-      local telescope = require("telescope")
-      local vimgrep_arguments = { unpack(telescopeConfig.values.vimgrep_arguments) }
-      table.insert(vimgrep_arguments, "--hidden")
-      table.insert(vimgrep_arguments, "--glob")
-      table.insert(vimgrep_arguments, "!**/.git/*")
-
-      telescope.setup({
-        defaults = {
-          vimgrep_arguments = vimgrep_arguments,
-        },
-        pickers = {
-          find_files = {
-            find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
-          },
-        },
-        extensions = {},
+      require("everforest").setup({
+        background = "hard",
       })
     end,
   },
 
-  -- Neotree
-  {
-    "nvim-neo-tree/neo-tree.nvim",
-    keys = {
-      { "<C-n>", "<cmd>Neotree toggle<CR>", desc = "Neotree Toggle" },
-      { "<leader>e", "<cmd>Neotree reveal<cr>", desc = "Neotree Reveal" },
-    },
-  },
-
-  -- gitsigns
-  {
-    "lewis6991/gitsigns.nvim",
-    opts = {
-      current_line_blame = true,
-    },
-  },
-
-  -- liveserver
-  {
-    "barrett-ruth/live-server.nvim",
-    cmd = { "LiveServerStart", "LiveServerStop" },
-    config = function()
-      require("live-server").setup()
-    end,
-  },
-
-  -- blink cmp
-  {
-    "saghen/blink.cmp",
-    opts = {
-      completion = {
-        ghost_text = {
-          enabled = false,
-        },
-      },
-    },
-  },
-
-  -- disable inlay_hints
-  {
-    "neovim/nvim-lspconfig",
-    opts = {
-      inlay_hints = { enabled = false },
-    },
-  },
-
-  -- tmux nvim
+  -- tmux
   {
     "christoomey/vim-tmux-navigator",
     cmd = {
@@ -99,13 +31,121 @@ return {
       "TmuxNavigateUp",
       "TmuxNavigateRight",
       "TmuxNavigatePrevious",
+      "TmuxNavigatorProcessList",
     },
     keys = {
       { "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>" },
       { "<c-j>", "<cmd><C-U>TmuxNavigateDown<cr>" },
       { "<c-k>", "<cmd><C-U>TmuxNavigateUp<cr>" },
       { "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
-      { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
+    },
+  },
+
+  -- disable ghost text in blink cmp
+  {
+    "saghen/blink.cmp",
+    opts = {
+      completion = {
+        ghost_text = { enabled = false },
+      },
+    },
+  },
+
+  -- disable inlay hint
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      inlay_hints = { enabled = false },
+    },
+  },
+
+  -- enabled git blame
+  {
+    "lewis6991/gitsigns.nvim",
+    config = function()
+      require("gitsigns").setup({
+        current_line_blame = true,
+      })
+    end,
+  },
+
+  {
+    "stevearc/conform.nvim",
+    opts = {
+      formatters_by_ft = {
+        liquid = { "prettier" },
+      },
+    },
+  },
+
+  -- avante plugin
+  {
+    "yetone/avante.nvim",
+    event = "VeryLazy",
+    version = false, -- Set this to "*" to always pull the latest release version, or set it to false to update to the latest code changes.
+    opts = {
+      -- add any opts here
+      -- for example
+      provider = "copilot",
+      auto_suggestions_provider = "copilot",
+      -- openai = {
+      --   endpoint = "https://api.openai.com/v1",
+      --   model = "gpt-4o", -- your desired model (or use gpt-4o, etc.)
+      --   timeout = 30000, -- timeout in milliseconds
+      --   temperature = 0, -- adjust if needed
+      --   max_tokens = 4096,
+      -- },
+      copilot = {
+        endpoint = "https://api.githubcopilot.com",
+        model = "gpt-4o-2024-08-06",
+        proxy = nil, -- [protocol://]host[:port] Use this proxy
+        allow_insecure = false, -- Allow insecure server connections
+        timeout = 30000, -- Timeout in milliseconds
+        temperature = 0,
+        max_tokens = 4096,
+      },
+    },
+    build = "make",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "stevearc/dressing.nvim",
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      "echasnovski/mini.pick", -- for file_selector provider mini.pick
+      "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
+      "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
+      "ibhagwan/fzf-lua", -- for file_selector provider fzf
+      "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
+      "zbirenbaum/copilot.lua", -- for providers='copilot'
+      {
+        "HakonHarnes/img-clip.nvim",
+        event = "VeryLazy",
+        opts = {
+          default = {
+            embed_image_as_base64 = false,
+            prompt_for_file_name = true,
+            drag_and_drop = {
+              insert_mode = true,
+            },
+            use_absolute_path = true,
+          },
+        },
+      },
+      {
+        "MeanderingProgrammer/render-markdown.nvim",
+        opts = {
+          file_types = { "markdown", "Avante" },
+        },
+        ft = { "markdown", "Avante" },
+      },
+    },
+  },
+
+  -- hightlight color
+  {
+    "brenoprata10/nvim-highlight-colors",
+    opts = {
+      render = "virtual",
     },
   },
 }
