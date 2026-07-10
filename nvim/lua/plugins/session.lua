@@ -1,0 +1,34 @@
+return {}
+-- return {
+--   -- rmagatti/auto-session: tự lưu và khôi phục session (buffer đang mở) theo từng thư mục làm việc
+--   {
+--     "rmagatti/auto-session",
+--     lazy = false,
+--     opts = {
+--       auto_save = true,
+--       auto_restore = true,
+--       suppressed_dirs = { "~/", "~/Downloads", "/" },
+--       -- đóng neo-tree trước khi save để nó không bị lưu vào session và tự mở lại
+--       pre_save_cmds = {
+--         function()
+--           if package.loaded["neo-tree"] then
+--             pcall(vim.cmd, "Neotree close")
+--           end
+--         end,
+--       },
+--       -- các buffer không active lúc save chỉ được `badd` (chưa load nội dung),
+--       -- nên restore xong không có filetype -> không treesitter/LSP. Force load
+--       -- và trigger lại FileType cho toàn bộ buffer để syntax/LSP hoạt động ngay.
+--       post_restore_cmds = {
+--         function()
+--           for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+--             if vim.fn.buflisted(buf) == 1 and vim.bo[buf].buftype == "" then
+--               vim.fn.bufload(buf)
+--               vim.bo[buf].filetype = vim.bo[buf].filetype
+--             end
+--           end
+--         end,
+--       },
+--     },
+--   },
+-- }
