@@ -26,6 +26,31 @@ return {
       scope = { enabled = false },
     },
   },
+  -- nvim-mini/mini.indentscope: vẽ đường thẳng đứng đánh dấu phạm vi thụt lề (scope) chứa con trỏ hiện tại
+  {
+    "nvim-mini/mini.indentscope",
+    version = false,
+    event = { "BufReadPre", "BufNewFile" },
+    init = function()
+      -- đăng ký sớm ở init() (chạy ngay lúc khởi động, không chờ lazy-load event) vì neo-tree
+      -- set filetype qua API buffer trực tiếp (không qua :edit) nên có thể fire trước khi
+      -- plugin này lazy-load; đăng ký muộn (trong config()) sẽ bỏ lỡ lần fire đó
+      vim.api.nvim_create_autocmd("FileType", {
+        desc = "Tắt mini.indentscope ở các filetype UI phụ",
+        pattern = { "neo-tree", "help", "man", "lazy", "mason", "checkhealth", "notify", "trouble", "lspinfo", "qf", "startuptime" },
+        callback = function()
+          vim.b.miniindentscope_disable = true
+        end,
+      })
+    end,
+    config = function()
+      require("mini.indentscope").setup({
+        draw = {
+          animation = require("mini.indentscope").gen_animation.none(), -- hiện ngay, không animation
+        },
+      })
+    end,
+  },
   -- NvChad/nvim-colorizer.lua: hiện màu của mã màu (hex/rgb/...) ngay trong buffer dưới dạng ô vuông virtual text
   {
     "NvChad/nvim-colorizer.lua",
@@ -93,6 +118,18 @@ return {
           end
         end,
         desc = "Close All Buffers",
+      },
+      {
+        "<leader>bo",
+        function()
+          local current = vim.api.nvim_get_current_buf()
+          for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+            if vim.bo[buf].buflisted and buf ~= current then
+              require("mini.bufremove").delete(buf, false)
+            end
+          end
+        end,
+        desc = "Close Other Buffers",
       },
       { "<leader><", "<cmd>BufferLineMovePrev<cr>",  desc = "Move Buffer Left" },
       { "<leader>>", "<cmd>BufferLineMoveNext<cr>",  desc = "Move Buffer Right" },

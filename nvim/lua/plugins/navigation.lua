@@ -31,6 +31,13 @@ return {
           expander_highlight = "NeoTreeExpander",
         },
       },
+      -- tự cuộn/highlight tới file đang mở trong cây, giữ nguyên các thư mục đã mở rộng trước đó
+      filesystem = {
+        follow_current_file = {
+          enabled = true,
+          leave_dirs_open = true,
+        },
+      },
     },
   },
 }
