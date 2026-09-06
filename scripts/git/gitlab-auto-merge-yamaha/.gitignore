@@ -1,0 +1,3 @@
+# Never commit secrets or a run-specific log.
+config/*.local.conf
+logs/*.log
