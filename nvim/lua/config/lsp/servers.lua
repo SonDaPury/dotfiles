@@ -13,7 +13,7 @@ return {
       },
     },
   },
-  gopls = {},
+  -- gopls = {},
   clangd = {},
   vtsls = {},
   tailwindcss = {},

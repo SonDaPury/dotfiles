@@ -1,20 +1,35 @@
 return {
   -- folke/tokyonight.nvim
-  { "folke/tokyonight.nvim", lazy = true },
+  { "folke/tokyonight.nvim",    lazy = true },
   -- catppuccin/nvim
-  { "catppuccin/nvim", name = "catppuccin", lazy = true },
+  { "catppuccin/nvim",          name = "catppuccin", lazy = true },
   -- ellisonleao/gruvbox.nvim
   { "ellisonleao/gruvbox.nvim", lazy = true },
   -- rebelot/kanagawa.nvim
-  { "rebelot/kanagawa.nvim", lazy = true },
+  { "rebelot/kanagawa.nvim",    lazy = true },
   -- craftzdog/solarized-osaka.nvim
-  { "craftzdog/solarized-osaka.nvim", lazy = true },
+  {
+    "craftzdog/solarized-osaka.nvim",
+    lazy = true,
+    priority = 1000,
+    opts = {
+      on_colors = function(colors)
+        -- colors.yellow200 = "#ffd84d"
+      end,
+      on_highlights = function(hl, c)
+        -- Cấu hình cho nhóm được tìm thấy từ lệnh :Inspect
+        -- hl["@variable.javascript"] = { fg = c.yellow200, } -- Dùng biến màu yellow đã sửa ở trên
+        -- hl["String"] = { fg = "#00FF00", italic = true } -- Truyền trực tiếp mã màu hex
+        -- hl["@variable"] = { fg = c.blue }
+      end,
+    }
+  },
   -- navarasu/onedark.nvim
-  { "navarasu/onedark.nvim", lazy = true },
+  { "navarasu/onedark.nvim",         lazy = true },
   -- scottmckendry/cyberdream.nvim
   { "scottmckendry/cyberdream.nvim", lazy = true },
   -- neanias/everforest-nvim
-  { "neanias/everforest-nvim", lazy = true },
+  { "neanias/everforest-nvim",       lazy = true },
   -- Mofiqul/dracula.nvim: theme mặc định khi mở nvim lần đầu, trước khi chọn qua picker
   {
     "Mofiqul/dracula.nvim",
