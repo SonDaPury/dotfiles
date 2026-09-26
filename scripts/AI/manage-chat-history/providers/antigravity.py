@@ -117,7 +117,7 @@ class AntigravityProvider(BaseProvider):
 
         session = None
         for s in self.list_sessions():
-            if s.id == session_id:
+            if s.id == session_id or s.id.startswith(session_id):
                 session = s
                 break
         if not session:
