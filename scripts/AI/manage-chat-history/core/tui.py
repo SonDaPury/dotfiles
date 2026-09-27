@@ -225,6 +225,35 @@ class TerminalUI:
             enter_alt_screen()
             self.reload_sessions()
 
+    def show_help(self) -> None:
+        cols, rows = get_terminal_size()
+        clear_screen()
+        box_width = min(cols - 4, 66)
+        help_lines = [
+            f"{BOLD}{CYAN}AI Chat History Manager ── Trợ giúp phím tắt{RESET}",
+            "─" * box_width,
+            f" {BOLD}↑{RESET} / {BOLD}k{RESET}, {BOLD}↓{RESET} / {BOLD}j{RESET}      : Di chuyển lên / xuống danh sách",
+            f" {BOLD}PageUp{RESET} / {BOLD}PageDown{RESET} : Cuộn trang nhanh",
+            f" {BOLD}Home{RESET} / {BOLD}End{RESET}       : Về đầu / Về cuối danh sách",
+            f" {BOLD}Space{RESET}          : Chọn / bỏ chọn phiên (đánh dấu [x])",
+            f" {BOLD}a{RESET}              : Chọn tất cả / Bỏ chọn tất cả",
+            f" {BOLD}Enter{RESET}          : Vào đoạn chat (Resume phiên làm việc)",
+            f" {BOLD}d{RESET} hoặc {BOLD}x{RESET}        : Xóa phiên chat đã chọn (có hộp thoại hỏi)",
+            f" {BOLD}/{RESET}              : Tìm kiếm theo tiêu đề hoặc workspace",
+            f" {BOLD}w{RESET}              : Bật / tắt chế độ lọc Workspace hiện tại",
+            f" {BOLD}p{RESET} / {BOLD}Tab{RESET}        : Chuyển đổi Provider (ALL / Antigravity / Claude / Codex)",
+            f" {BOLD}r{RESET}              : Tải lại (refresh) danh sách",
+            f" {BOLD}q{RESET} / {BOLD}Esc{RESET}        : Thoát khỏi ứng dụng",
+            "─" * box_width,
+            f" {YELLOW}[ Nhấn phím bất kỳ để quay lại danh sách ]{RESET}"
+        ]
+        start_row = max(1, (rows - len(help_lines)) // 2)
+        sys.stdout.write("\n" * start_row)
+        for line in help_lines:
+            sys.stdout.write(f"  {line}\n")
+        sys.stdout.flush()
+        get_key()
+
     def run(self) -> None:
         init_terminal()
         enter_alt_screen()
@@ -259,6 +288,8 @@ class TerminalUI:
                     self.status_message = "Đã làm mới dữ liệu."
                 elif key == '/':
                     self.prompt_search()
+                elif key in ('?', 'h'):
+                    self.show_help()
                 elif key in ('d', 'x', 'DELETE'):
                     self.confirm_and_delete()
                 elif key == 'ENTER':

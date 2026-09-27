@@ -59,13 +59,13 @@ def get_terminal_size() -> Tuple[int, int]:
     return size.columns, size.lines
 
 def enter_alt_screen() -> None:
-    """Switch to alternate screen buffer and hide cursor."""
-    sys.stdout.write("\033[?1049h\033[?25l")
+    """Switch to alternate screen buffer, hide cursor, and set normal cursor mode."""
+    sys.stdout.write("\033[?1049h\033[?25l\033[?1l\033>")
     sys.stdout.flush()
 
 def exit_alt_screen() -> None:
-    """Switch back to main screen buffer and show cursor."""
-    sys.stdout.write("\033[?1049l\033[?25h")
+    """Switch back to main screen buffer, show cursor, and restore keypad."""
+    sys.stdout.write("\033[?1049l\033[?25h\033>")
     sys.stdout.flush()
 
 def clear_screen() -> None:
@@ -82,6 +82,30 @@ def init_terminal() -> None:
         mode = ctypes.c_ulong()
         kernel32.GetConsoleMode(h_out, ctypes.byref(mode))
         kernel32.SetConsoleMode(h_out, mode.value | 0x0004)
+
+def decode_escape_sequence(seq: str) -> str:
+    """Decodes ANSI escape sequences into standard key names."""
+    if not seq.startswith('\x1b'):
+        return seq
+    if len(seq) == 1:
+        return 'ESC'
+
+    prefix = seq[1]
+    # Application Mode Cursor Keys (\x1bOA, \x1bOB, etc.)
+    if prefix == 'O' and len(seq) >= 3:
+        mapping = {'A': 'UP', 'B': 'DOWN', 'C': 'RIGHT', 'D': 'LEFT', 'H': 'HOME', 'F': 'END'}
+        return mapping.get(seq[2], 'ESC')
+
+    # Standard CSI sequences (\x1b[A, \x1b[B, \x1b[3~, etc.)
+    if prefix == '[' and len(seq) >= 3:
+        ch = seq[2]
+        if ch in ('A', 'B', 'C', 'D', 'H', 'F'):
+            return {'A': 'UP', 'B': 'DOWN', 'C': 'RIGHT', 'D': 'LEFT', 'H': 'HOME', 'F': 'END'}[ch]
+        if ch in ('1', '2', '3', '4', '5', '6', '7', '8'):
+            mapping = {'1': 'HOME', '3': 'DELETE', '4': 'END', '5': 'PAGE_UP', '6': 'PAGE_DOWN'}
+            return mapping.get(ch, 'ESC')
+
+    return 'ESC'
 
 def get_key() -> str:
     """
@@ -125,24 +149,16 @@ def get_key() -> str:
             ch1 = sys.stdin.read(1)
             if ch1 == '\x1b':
                 import select
-                r, _, _ = select.select([sys.stdin], [], [], 0.05)
-                if not r:
-                    return 'ESC'
-                ch2 = sys.stdin.read(1)
-                if ch2 == '[':
-                    ch3 = sys.stdin.read(1)
-                    if ch3 == 'A': return 'UP'
-                    if ch3 == 'B': return 'DOWN'
-                    if ch3 == 'C': return 'RIGHT'
-                    if ch3 == 'D': return 'LEFT'
-                    if ch3 == 'H': return 'HOME'
-                    if ch3 == 'F': return 'END'
-                    if ch3 in ('5', '6', '3'):
-                        ch4 = sys.stdin.read(1)
-                        if ch3 == '5': return 'PAGE_UP'
-                        if ch3 == '6': return 'PAGE_DOWN'
-                        if ch3 == '3': return 'DELETE'
-                return 'ESC'
+                seq = ch1
+                while True:
+                    r, _, _ = select.select([sys.stdin], [], [], 0.05)
+                    if not r:
+                        break
+                    next_char = sys.stdin.read(1)
+                    seq += next_char
+                    if len(seq) >= 5 or next_char in ('A', 'B', 'C', 'D', 'H', 'F', '~'):
+                        break
+                return decode_escape_sequence(seq)
             if ch1 in ('\r', '\n'):
                 return 'ENTER'
             if ch1 == ' ':
