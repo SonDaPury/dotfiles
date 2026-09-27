@@ -54,7 +54,7 @@ class AntigravityProvider(BaseProvider):
 
         sessions = []
         try:
-            conn = sqlite3.connect(f"file:{self.db_path}?mode=ro", uri=True)
+            conn = sqlite3.connect(str(self.db_path), timeout=15.0)
             conn.row_factory = sqlite3.Row
             cur = conn.cursor()
             cur.execute("""
@@ -64,7 +64,7 @@ class AntigravityProvider(BaseProvider):
             """)
             rows = cur.fetchall()
             conn.close()
-        except sqlite3.OperationalError:
+        except Exception:
             return []
 
         for row in rows:
@@ -123,7 +123,7 @@ class AntigravityProvider(BaseProvider):
         if not session:
             return None
 
-        transcript_file = self.brain_dir / session_id / ".system_generated" / "logs" / "transcript.jsonl"
+        transcript_file = self.brain_dir / session.id / ".system_generated" / "logs" / "transcript.jsonl"
         messages = []
         if transcript_file.exists():
             try:
@@ -135,9 +135,12 @@ class AntigravityProvider(BaseProvider):
                         content = item.get("content", "")
                         if content and src in ("USER_EXPLICIT", "MODEL"):
                             role = "User" if src == "USER_EXPLICIT" else "Agent"
-                            messages.append(f"{role}: {content.strip()}")
-                            if len(messages) >= 8:
-                                break
+                            clean_text = content.replace("<USER_REQUEST>", "").replace("</USER_REQUEST>", "")
+                            clean_text = " ".join(l.strip() for l in clean_text.splitlines() if l.strip())
+                            if clean_text:
+                                messages.append(f"{role}: {clean_text}")
+                                if len(messages) >= 12:
+                                    break
             except Exception:
                 pass
 

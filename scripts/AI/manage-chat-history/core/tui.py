@@ -105,53 +105,70 @@ class TerminalUI:
         if current_session:
             details = self.manager.get_session_details(current_session.provider, current_session.id)
 
-        for i in range(content_height):
-            idx = self.scroll_offset + i
-            # Left pane line
-            if idx < len(self.sessions):
-                s = self.sessions[idx]
-                is_cur = (idx == self.selected_index)
-                is_marked = s.id in self.marked_ids
-                mark_str = "[x]" if is_marked else "[ ]"
-                cursor_str = ">" if is_cur else " "
-                time_str = format_relative_time(s.last_modified)
-                ws_name = f"({s.workspace_paths[0].name})" if s.workspace_paths else ""
-
-                avail_title = max(10, list_width - len(time_str) - 16)
-                title_str = truncate_text(f"{s.title} {ws_name}", avail_title)
-
-                left_raw = f"{cursor_str}{mark_str} {title_str:<{avail_title}} {time_str} ({s.provider})"
-                if is_cur:
-                    left_line = f"{BG_GRAY}{BOLD}{left_raw[:list_width]:<{list_width}}{RESET}"
-                elif is_marked:
-                    left_line = f"{YELLOW}{left_raw[:list_width]:<{list_width}}{RESET}"
-                else:
-                    left_line = f"{left_raw[:list_width]:<{list_width}}"
-            else:
-                left_line = " " * list_width
-
-            # Right pane line
-            right_line = ""
-            if current_session:
-                if i == 0:
-                    right_line = f"{BOLD}ID:{RESET} {current_session.id}"
-                elif i == 1:
-                    right_line = f"{BOLD}Tiêu đề:{RESET} {truncate_text(current_session.title, preview_width - 10)}"
+        if not self.sessions:
+            for i in range(content_height):
+                if i == 1:
+                    left_line = f"  {YELLOW}[Không tìm thấy phiên chat nào]{RESET}"
                 elif i == 2:
-                    right_line = f"{BOLD}Provider:{RESET} {current_session.provider_display}"
+                    scope_tip = "bật" if not self.cwd_only else "tắt"
+                    left_line = f"  {DIM}• Nhấn 'w' để {scope_tip} lọc Workspace{RESET}"
                 elif i == 3:
-                    ws_str = str(current_session.workspace_paths[0]) if current_session.workspace_paths else "N/A"
-                    right_line = f"{BOLD}Thư mục:{RESET} {truncate_text(ws_str, preview_width - 10)}"
-                elif i == 4:
-                    right_line = f"{BOLD}Cập nhật:{RESET} {current_session.last_modified.strftime('%Y-%m-%d %H:%M:%S')} ({current_session.step_count} bước)"
-                elif i == 5:
-                    right_line = "─" * preview_width
-                elif i >= 6:
-                    snippet_idx = i - 6
-                    if details and snippet_idx < len(details.messages_snippet):
-                        right_line = truncate_text(details.messages_snippet[snippet_idx], preview_width)
+                    left_line = f"  {DIM}• Nhấn 'p' để đổi AI Provider ({self.provider_filter}){RESET}"
+                elif i == 4 and self.search_query:
+                    left_line = f"  {DIM}• Nhấn '/' để xóa bộ lọc tìm kiếm{RESET}"
+                else:
+                    left_line = ""
+                sys.stdout.write(f"{left_line:<{list_width}} │\n")
+        else:
+            for i in range(content_height):
+                idx = self.scroll_offset + i
+                # Left pane line
+                if idx < len(self.sessions):
+                    s = self.sessions[idx]
+                    is_cur = (idx == self.selected_index)
+                    is_marked = s.id in self.marked_ids
+                    mark_str = "[x]" if is_marked else "[ ]"
+                    cursor_str = ">" if is_cur else " "
+                    time_str = format_relative_time(s.last_modified)
+                    ws_name = f"({s.workspace_paths[0].name})" if s.workspace_paths else ""
 
-            sys.stdout.write(f"{left_line} │ {right_line[:preview_width]}\n")
+                    avail_title = max(10, list_width - len(time_str) - 16)
+                    title_str = truncate_text(f"{s.title} {ws_name}", avail_title)
+
+                    left_raw = f"{cursor_str}{mark_str} {title_str:<{avail_title}} {time_str} ({s.provider})"
+                    if is_cur:
+                        left_line = f"{BG_GRAY}{BOLD}{left_raw[:list_width]:<{list_width}}{RESET}"
+                    elif is_marked:
+                        left_line = f"{YELLOW}{left_raw[:list_width]:<{list_width}}{RESET}"
+                    else:
+                        left_line = f"{left_raw[:list_width]:<{list_width}}"
+                else:
+                    left_line = " " * list_width
+
+                # Right pane line
+                right_line = ""
+                if current_session:
+                    if i == 0:
+                        right_line = f"{BOLD}ID:{RESET} {current_session.id}"
+                    elif i == 1:
+                        right_line = f"{BOLD}Tiêu đề:{RESET} {truncate_text(current_session.title, preview_width - 10)}"
+                    elif i == 2:
+                        right_line = f"{BOLD}Provider:{RESET} {current_session.provider_display}"
+                    elif i == 3:
+                        ws_str = str(current_session.workspace_paths[0]) if current_session.workspace_paths else "N/A"
+                        right_line = f"{BOLD}Thư mục:{RESET} {truncate_text(ws_str, preview_width - 10)}"
+                    elif i == 4:
+                        right_line = f"{BOLD}Cập nhật:{RESET} {current_session.last_modified.strftime('%Y-%m-%d %H:%M:%S')} ({current_session.step_count} bước)"
+                    elif i == 5:
+                        right_line = "─" * preview_width
+                    elif i >= 6:
+                        snippet_idx = i - 6
+                        if details and snippet_idx < len(details.messages_snippet):
+                            clean_snip = details.messages_snippet[snippet_idx].replace("\n", " ").replace("\r", " ")
+                            right_line = truncate_text(clean_snip, preview_width)
+
+                clean_right = right_line.replace("\n", " ").replace("\r", "")
+                sys.stdout.write(f"{left_line} │ {clean_right[:preview_width]}\n")
 
         # 4. Footer shortcuts bar
         sys.stdout.write("─" * cols + "\n")
