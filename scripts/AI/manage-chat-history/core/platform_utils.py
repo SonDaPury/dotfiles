@@ -42,6 +42,8 @@ def truncate_text(text: str, max_len: int, placeholder: str = "...") -> str:
 
 def format_relative_time(dt: datetime) -> str:
     """Returns compact human-readable date/time string."""
+    if dt.tzinfo is not None:
+        dt = dt.astimezone().replace(tzinfo=None)
     now = datetime.now()
     if dt.date() == now.date():
         return f"Hôm nay {dt.strftime('%H:%M')}"

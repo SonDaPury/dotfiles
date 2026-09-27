@@ -34,14 +34,18 @@ class AntigravityProvider(BaseProvider):
         return self.cli_dir.exists() and self.db_path.exists()
 
     def _parse_datetime(self, val: str) -> datetime:
+        dt = None
         try:
-            return datetime.fromisoformat(val)
+            dt = datetime.fromisoformat(val)
         except Exception:
             try:
                 clean_val = val.split('+')[0].split('.')[0]
-                return datetime.strptime(clean_val, "%Y-%m-%d %H:%M:%S")
+                dt = datetime.strptime(clean_val, "%Y-%m-%d %H:%M:%S")
             except Exception:
-                return datetime.now()
+                dt = datetime.now()
+        if dt.tzinfo is not None:
+            dt = dt.astimezone().replace(tzinfo=None)
+        return dt
 
     def list_sessions(self, cwd_only: bool = False, current_dir: Optional[Path] = None) -> List[Session]:
         if not self.is_available():

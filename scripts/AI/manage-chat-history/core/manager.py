@@ -1,3 +1,4 @@
+from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
 from core.models import Session, SessionDetails, DeleteResult
@@ -40,8 +41,14 @@ class SessionManager:
             for p in self.get_available_providers():
                 sessions.extend(p.list_sessions(cwd_only=cwd_only, current_dir=current_dir))
 
-        # Sort descending by last modified
-        sessions.sort(key=lambda s: s.last_modified, reverse=True)
+        # Sort descending by last modified (safe for naive and aware datetimes)
+        def _sort_key(s: Session) -> datetime:
+            dt = s.last_modified
+            if dt.tzinfo is not None:
+                return dt.astimezone().replace(tzinfo=None)
+            return dt
+
+        sessions.sort(key=_sort_key, reverse=True)
 
         # Apply search query filter if provided
         if search_query:
