@@ -18,6 +18,9 @@ return {
         go = { "gofmt" },
         c = { "clang_format" },
         cpp = { "clang_format" },
+        java = { "google-java-format" },
+        jsp = { "prettier" },
+        xml = { "xmlformatter" },
       },
       format_on_save = {
         timeout_ms = 500,

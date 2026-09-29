@@ -3,7 +3,7 @@
 
 -- Phải lấy on_attach mặc định của eslint (tạo lệnh LspEslintFixAll) TRƯỚC khi
 -- vim.lsp.config("eslint", ...) ở lsp.lua ghi đè nó, nếu không sẽ bị đệ quy vô hạn.
-local eslint_base_on_attach = vim.lsp.config.eslint.on_attach
+local eslint_base_on_attach = vim.lsp.config.eslint and vim.lsp.config.eslint.on_attach
 
 return {
   lua_ls = {
@@ -17,7 +17,13 @@ return {
   clangd = {},
   vtsls = {},
   tailwindcss = {},
-  html = {},
+  html = {
+    filetypes = { "html", "jsp" },
+  },
+  emmet_language_server = {
+    filetypes = { "html", "css", "javascriptreact", "typescriptreact", "jsp" },
+  },
+  lemminx = {},
   cssls = {},
   jsonls = {},
   eslint = {

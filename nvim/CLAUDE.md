@@ -47,6 +47,11 @@ Gotcha — **neo-tree's buffer bypasses normal buffer-open events**: it creates 
 
 **Session persistence** (`lua/plugins/session.lua`) is currently disabled — the file returns `{}`; the `auto-session` spec is present but commented out.
 
+**Java & JSP / Servlet** (`lua/plugins/java.lua` + `lua/config/lsp/servers.lua` + `snippets/`):
+- `mfussenegger/nvim-jdtls` manages Eclipse JDTLS exclusively for `ft = java` (not via standard `servers.lua` to ensure isolated workspace cache under `~/.cache/jdtls/workspace/<project_name>`, automated Lombok agent injection, and DAP bundle loading). Keymaps under `<leader>j*`: `<leader>jo` (organize imports), `<leader>jv` (extract variable), `<leader>jc` (extract constant), `<leader>jm` (extract method), `<leader>jt`/`<leader>jT` (test runner), `<leader>ju` (update project config).
+- JSP & XML: `.jsp`, `.jspf`, `.tag` detected as `ft = jsp`. HTML LSP and `emmet_language_server` attach to `jsp` files for rapid HTML and tag completion. `snippets/jsp.json` provides comprehensive JSP directives, JSTL Core/Format tags, and JSP Actions through `blink.cmp` (`extended_filetypes = { jsp = { "html" } }`). `lemminx` provides XML validation/completion for `web.xml`, `pom.xml`, and `*.tld`.
+- Remote Debugging: `nvim-dap` configured with `java-debug-adapter` and `java-test`, connecting to Tomcat / Remote JVM running in Docker or host via JPDA port `5005` (`127.0.0.1:5005`).
+
 ## Conventions
 
 - Inline comments in config files are written in Vietnamese explaining the *why* (e.g. ordering gotchas, non-obvious workarounds) — match this style when editing existing files.

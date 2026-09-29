@@ -1,0 +1,11 @@
+{
+  "name": "jsp-snippets",
+  "contributes": {
+    "snippets": [
+      {
+        "language": "jsp",
+        "path": "./jsp.json"
+      }
+    ]
+  }
+}

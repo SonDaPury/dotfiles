@@ -72,3 +72,13 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
   end,
 })
+
+-- Nhận diện filetype cho Java Web (JSP, JSPF, custom tag)
+vim.filetype.add({
+  extension = {
+    jsp = "jsp",
+    jspf = "jsp",
+    tag = "jsp",
+  },
+})
+

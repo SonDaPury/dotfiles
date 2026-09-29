@@ -55,7 +55,7 @@ return {
       end
 
       require("mason-nvim-dap").setup({
-        ensure_installed = { "js-debug-adapter", "codelldb" },
+        ensure_installed = { "js-debug-adapter", "codelldb", "java-debug-adapter", "java-test" },
         automatic_installation = true,
         -- handlers phải có (kể cả rỗng) thì mason-nvim-dap mới tự đăng ký dap.adapters cho package đã cài
         handlers = {},
@@ -110,6 +110,28 @@ return {
         },
       }
       dap.configurations.c = dap.configurations.cpp
+
+      -- Java / Tomcat / Servlet / Docker: Remote JVM attach (JPDA)
+      dap.configurations.java = {
+        {
+          type = "java",
+          request = "attach",
+          name = "Attach to Docker / Tomcat Remote JVM (port 5005)",
+          hostName = "127.0.0.1",
+          port = 5005,
+        },
+        {
+          type = "java",
+          request = "attach",
+          name = "Attach to Remote JVM (Custom host/port)",
+          hostName = function()
+            return vim.fn.input("Host: ", "127.0.0.1")
+          end,
+          port = function()
+            return tonumber(vim.fn.input("Port: ", "5005"))
+          end,
+        },
+      }
     end,
   },
 }

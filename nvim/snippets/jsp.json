@@ -1,0 +1,237 @@
+{
+  "JSP Page Directive": {
+    "prefix": "page",
+    "body": [
+      "<%@ page contentType=\"text/html; charset=UTF-8\" pageEncoding=\"UTF-8\" %>"
+    ],
+    "description": "JSP Page directive UTF-8"
+  },
+  "JSP Page Directive with Import": {
+    "prefix": "page:import",
+    "body": [
+      "<%@ page contentType=\"text/html; charset=UTF-8\" pageEncoding=\"UTF-8\" import=\"${1:java.util.*}\" %>"
+    ],
+    "description": "JSP Page directive with Java import"
+  },
+  "JSTL Core Taglib": {
+    "prefix": "taglib:c",
+    "body": [
+      "<%@ taglib prefix=\"c\" uri=\"http://java.sun.com/jsp/jstl/core\" %>"
+    ],
+    "description": "JSTL Core Taglib directive"
+  },
+  "JSTL Format Taglib": {
+    "prefix": "taglib:fmt",
+    "body": [
+      "<%@ taglib prefix=\"fmt\" uri=\"http://java.sun.com/jsp/jstl/fmt\" %>"
+    ],
+    "description": "JSTL Formatting Taglib directive"
+  },
+  "JSTL Functions Taglib": {
+    "prefix": "taglib:fn",
+    "body": [
+      "<%@ taglib prefix=\"fn\" uri=\"http://java.sun.com/jsp/jstl/functions\" %>"
+    ],
+    "description": "JSTL Functions Taglib directive"
+  },
+  "JSTL SQL Taglib": {
+    "prefix": "taglib:sql",
+    "body": [
+      "<%@ taglib prefix=\"sql\" uri=\"http://java.sun.com/jsp/jstl/sql\" %>"
+    ],
+    "description": "JSTL SQL Taglib directive"
+  },
+  "JSP Include Directive": {
+    "prefix": "include:dir",
+    "body": [
+      "<%@ include file=\"${1:header.jsp}\" %>"
+    ],
+    "description": "JSP static include directive"
+  },
+  "JSP Scriptlet": {
+    "prefix": "<%",
+    "body": [
+      "<% ${1} %>"
+    ],
+    "description": "JSP Java scriptlet"
+  },
+  "JSP Expression": {
+    "prefix": "<%=",
+    "body": [
+      "<%= ${1} %>"
+    ],
+    "description": "JSP Java expression"
+  },
+  "JSP Declaration": {
+    "prefix": "<%!",
+    "body": [
+      "<%! ${1} %>"
+    ],
+    "description": "JSP declaration (methods / fields)"
+  },
+  "JSP Comment": {
+    "prefix": "<%--",
+    "body": [
+      "<%-- ${1} --%>"
+    ],
+    "description": "JSP comment"
+  },
+  "JSTL forEach Loop": {
+    "prefix": "c:forEach",
+    "body": [
+      "<c:forEach var=\"${1:item}\" items=\"\\${${2:items}}\">",
+      "\t${3:<tr><td>\\${${1:item}}</td></tr>}",
+      "</c:forEach>"
+    ],
+    "description": "JSTL c:forEach iterate through collection"
+  },
+  "JSTL forEach Status": {
+    "prefix": "c:forEach:status",
+    "body": [
+      "<c:forEach var=\"${1:item}\" items=\"\\${${2:items}}\" varStatus=\"${3:loop}\">",
+      "\t${4:<tr><td>\\${${3:loop}.index + 1}</td><td>\\${${1:item}}</td></tr>}",
+      "</c:forEach>"
+    ],
+    "description": "JSTL c:forEach loop with varStatus"
+  },
+  "JSTL if Condition": {
+    "prefix": "c:if",
+    "body": [
+      "<c:if test=\"\\${${1:not empty list}}\">",
+      "\t${2}",
+      "</c:if>"
+    ],
+    "description": "JSTL c:if condition"
+  },
+  "JSTL choose / when / otherwise": {
+    "prefix": "c:choose",
+    "body": [
+      "<c:choose>",
+      "\t<c:when test=\"\\${${1:condition}}\">",
+      "\t\t${2}",
+      "\t</c:when>",
+      "\t<c:otherwise>",
+      "\t\t${3}",
+      "\t</c:otherwise>",
+      "</c:choose>"
+    ],
+    "description": "JSTL c:choose switch-case"
+  },
+  "JSTL when": {
+    "prefix": "c:when",
+    "body": [
+      "<c:when test=\"\\${${1:condition}}\">",
+      "\t${2}",
+      "</c:when>"
+    ],
+    "description": "JSTL c:when branch"
+  },
+  "JSTL otherwise": {
+    "prefix": "c:otherwise",
+    "body": [
+      "<c:otherwise>",
+      "\t${1}",
+      "</c:otherwise>"
+    ],
+    "description": "JSTL c:otherwise fallback"
+  },
+  "JSTL set Variable": {
+    "prefix": "c:set",
+    "body": [
+      "<c:set var=\"${1:name}\" value=\"\\${${2:value}}\" scope=\"${3|request,session,page,application|}\" />"
+    ],
+    "description": "JSTL c:set variable"
+  },
+  "JSTL out Value": {
+    "prefix": "c:out",
+    "body": [
+      "<c:out value=\"\\${${1:value}}\" default=\"${2}\" />"
+    ],
+    "description": "JSTL c:out escaped expression"
+  },
+  "JSTL URL": {
+    "prefix": "c:url",
+    "body": [
+      "<c:url value=\"${1:/path}\" var=\"${2:urlVar}\">",
+      "\t<c:param name=\"${3:id}\" value=\"\\${${4:item.id}}\" />",
+      "</c:url>"
+    ],
+    "description": "JSTL c:url builder with param"
+  },
+  "JSTL Redirect": {
+    "prefix": "c:redirect",
+    "body": [
+      "<c:redirect url=\"${1:/login.jsp}\" />"
+    ],
+    "description": "JSTL c:redirect"
+  },
+  "JSTL Format Date": {
+    "prefix": "fmt:formatDate",
+    "body": [
+      "<fmt:formatDate value=\"\\${${1:date}}\" pattern=\"${2:yyyy-MM-dd HH:mm:ss}\" />"
+    ],
+    "description": "JSTL fmt:formatDate"
+  },
+  "JSTL Format Number": {
+    "prefix": "fmt:formatNumber",
+    "body": [
+      "<fmt:formatNumber value=\"\\${${1:amount}}\" type=\"${2|currency,number,percent|}\" />"
+    ],
+    "description": "JSTL fmt:formatNumber"
+  },
+  "JSP Action Include": {
+    "prefix": "jsp:include",
+    "body": [
+      "<jsp:include page=\"${1:content.jsp}\" />"
+    ],
+    "description": "Standard JSP include action"
+  },
+  "JSP Action Forward": {
+    "prefix": "jsp:forward",
+    "body": [
+      "<jsp:forward page=\"${1:target.jsp}\" />"
+    ],
+    "description": "Standard JSP forward action"
+  },
+  "JSP Action UseBean": {
+    "prefix": "jsp:useBean",
+    "body": [
+      "<jsp:useBean id=\"${1:beanName}\" class=\"${2:com.example.User}\" scope=\"${3|request,session,page,application|}\" />"
+    ],
+    "description": "Standard JSP useBean action"
+  },
+  "JSP Action SetProperty": {
+    "prefix": "jsp:setProperty",
+    "body": [
+      "<jsp:setProperty name=\"${1:beanName}\" property=\"${2:*}\" />"
+    ],
+    "description": "Standard JSP setProperty action"
+  },
+  "JSP Action GetProperty": {
+    "prefix": "jsp:getProperty",
+    "body": [
+      "<jsp:getProperty name=\"${1:beanName}\" property=\"${2:propertyName}\" />"
+    ],
+    "description": "Standard JSP getProperty action"
+  },
+  "JSP HTML5 Boilerplate": {
+    "prefix": "jsp5",
+    "body": [
+      "<%@ page contentType=\"text/html; charset=UTF-8\" pageEncoding=\"UTF-8\" %>",
+      "<%@ taglib prefix=\"c\" uri=\"http://java.sun.com/jsp/jstl/core\" %>",
+      "<!DOCTYPE html>",
+      "<html lang=\"vi\">",
+      "<head>",
+      "\t<meta charset=\"UTF-8\">",
+      "\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
+      "\t<title>${1:Title}</title>",
+      "</head>",
+      "<body>",
+      "\t<h1>${2:Hello JSP}</h1>",
+      "\t${3}",
+      "</body>",
+      "</html>"
+    ],
+    "description": "Full HTML5 template with JSP UTF-8 and JSTL Core taglib"
+  }
+}
