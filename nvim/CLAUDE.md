@@ -52,6 +52,12 @@ Gotcha — **neo-tree's buffer bypasses normal buffer-open events**: it creates 
 - JSP & XML: `.jsp`, `.jspf`, `.tag` detected as `ft = jsp`. HTML LSP and `emmet_language_server` attach to `jsp` files for rapid HTML and tag completion. `snippets/jsp.json` provides comprehensive JSP directives, JSTL Core/Format tags, and JSP Actions through `blink.cmp` (`extended_filetypes = { jsp = { "html" } }`). `lemminx` provides XML validation/completion for `web.xml`, `pom.xml`, and `*.tld`.
 - Remote Debugging: `nvim-dap` configured with `java-debug-adapter` and `java-test`, connecting to Tomcat / Remote JVM running in Docker or host via JPDA port `5005` (`127.0.0.1:5005`).
 
+**Python** (`lua/config/lsp/servers.lua` + `lua/plugins/format.lua` + `lua/plugins/dap.lua` + `lua/plugins/colorscheme.lua`):
+- LSP: `pyright` (intellisense, type checking, tự động nhận diện virtualenv `.venv`/`venv`/`$VIRTUAL_ENV` qua `before_init`) + `ruff` LSP (lint diagnostics & code actions, tắt hoverProvider để tránh trùng lặp với pyright).
+- Formatting: `conform.nvim` chạy `ruff_organize_imports` và `ruff_format` khi lưu file.
+- Debugging: `nvim-dap` tích hợp adapter `debugpy` (tự động cài đặt qua `mason-nvim-dap`). Hỗ trợ cấu hình chạy file hiện tại (Launch file), chạy kèm tham số (Launch with arguments) và remote attach (port 5678), tự động ưu tiên python trong môi trường ảo (.venv/venv).
+- Syntax & Highlight: `nvim-treesitter` tự động nạp parser `"python"`.
+
 ## Conventions
 
 - Inline comments in config files are written in Vietnamese explaining the *why* (e.g. ordering gotchas, non-obvious workarounds) — match this style when editing existing files.

@@ -21,6 +21,7 @@ return {
         java = { "google-java-format" },
         jsp = { "prettier" },
         xml = { "xmlformatter" },
+        python = { "ruff_organize_imports", "ruff_format" },
       },
       format_on_save = {
         timeout_ms = 500,

@@ -37,4 +37,39 @@ return {
       })
     end,
   },
+  pyright = {
+    before_init = function(_, config)
+      -- Tự động tìm virtualenv (.venv, venv, hoặc $VIRTUAL_ENV)
+      -- để Pyright nhận diện đúng thư viện trong môi trường ảo
+      local cwd = vim.fn.getcwd()
+      local python_candidates = {
+        cwd .. "/.venv/bin/python",
+        cwd .. "/venv/bin/python",
+        vim.env.VIRTUAL_ENV and (vim.env.VIRTUAL_ENV .. "/bin/python"),
+      }
+      for _, path in ipairs(python_candidates) do
+        if path and vim.fn.executable(path) == 1 then
+          config.settings = config.settings or {}
+          config.settings.python = config.settings.python or {}
+          config.settings.python.pythonPath = path
+          break
+        end
+      end
+    end,
+    settings = {
+      python = {
+        analysis = {
+          autoSearchPaths = true,
+          useLibraryCodeForTypes = true,
+          diagnosticMode = "openFilesOnly",
+        },
+      },
+    },
+  },
+  ruff = {
+    on_attach = function(client)
+      -- Tắt hover provider của ruff để nhường cho pyright hiển thị type doc đầy đủ
+      client.server_capabilities.hoverProvider = false
+    end,
+  },
 }

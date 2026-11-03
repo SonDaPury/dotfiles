@@ -77,6 +77,10 @@ return {
 		},
 	},
 	{ "NTBBloodbath/doom-one.nvim", lazy = true },
+	{
+		"atmosuwiryo/vim-winteriscoming",
+		lazy = true,
+	},
 
 	-- zaldih/themery.nvim: picker chọn colorscheme, tự lưu lựa chọn và áp dụng lại cho các lần mở nvim sau
 	{
@@ -134,6 +138,22 @@ return {
 				"modus",
 				"night-owl",
 				"doom-one",
+				{
+					name = "vim-winteriscoming-dark-blue",
+					colorscheme = "WinterIsComing-dark-blue-color-theme",
+				},
+				{
+					name = "vim-winteriscoming-dark-blue-no-italic",
+					colorscheme = "WinterIsComing-dark-blue-color-no-italics-theme",
+				},
+				{
+					name = "vim-winteriscoming-dark-no-italic",
+					colorscheme = "WinterIsComing-dark-color-no-italics-theme",
+				},
+				{
+					name = "vim-winteriscoming-dark",
+					colorscheme = "WinterIsComing-dark-color-theme",
+				},
 			},
 			livePreview = true,
 		},
@@ -163,6 +183,7 @@ return {
 				"go",
 				"cpp",
 				"java",
+				"python",
 			}
 			require("nvim-treesitter").install(ensure_installed)
 

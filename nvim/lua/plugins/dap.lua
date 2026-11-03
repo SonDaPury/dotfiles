@@ -55,7 +55,7 @@ return {
       end
 
       require("mason-nvim-dap").setup({
-        ensure_installed = { "js-debug-adapter", "codelldb", "java-debug-adapter", "java-test" },
+        ensure_installed = { "js-debug-adapter", "codelldb", "java-debug-adapter", "java-test", "debugpy" },
         automatic_installation = true,
         -- handlers phải có (kể cả rỗng) thì mason-nvim-dap mới tự đăng ký dap.adapters cho package đã cài
         handlers = {},
@@ -130,6 +130,81 @@ return {
           port = function()
             return tonumber(vim.fn.input("Port: ", "5005"))
           end,
+        },
+      }
+
+      -- Python: debugpy
+      local function get_python_path()
+        local cwd = vim.fn.getcwd()
+        if vim.fn.executable(cwd .. "/.venv/bin/python") == 1 then
+          return cwd .. "/.venv/bin/python"
+        elseif vim.fn.executable(cwd .. "/venv/bin/python") == 1 then
+          return cwd .. "/venv/bin/python"
+        elseif vim.env.VIRTUAL_ENV then
+          return vim.env.VIRTUAL_ENV .. "/bin/python"
+        end
+        return vim.fn.exepath("python3") or "python3"
+      end
+
+      if not dap.adapters.python then
+        dap.adapters.python = function(cb, config)
+          if config.request == "attach" then
+            local port = (config.connect or config).port
+            local host = (config.connect or config).host or "127.0.0.1"
+            cb({
+              type = "server",
+              port = assert(port, "`connect.port` is required for a python `attach` configuration"),
+              host = host,
+              options = {
+                source_filetype = "python",
+              },
+            })
+          else
+            local mason_debugpy = vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/bin/python"
+            local cmd = (vim.fn.executable(mason_debugpy) == 1 and mason_debugpy) or get_python_path()
+            cb({
+              type = "executable",
+              command = cmd,
+              args = { "-m", "debugpy.adapter" },
+              options = {
+                source_filetype = "python",
+              },
+            })
+          end
+        end
+      end
+
+      dap.configurations.python = {
+        {
+          type = "python",
+          request = "launch",
+          name = "Launch file",
+          program = "${file}",
+          pythonPath = get_python_path,
+        },
+        {
+          type = "python",
+          request = "launch",
+          name = "Launch file with arguments",
+          program = "${file}",
+          args = function()
+            local args_string = vim.fn.input("Arguments: ")
+            return vim.split(args_string, " +")
+          end,
+          pythonPath = get_python_path,
+        },
+        {
+          type = "python",
+          request = "attach",
+          name = "Attach remote (port 5678)",
+          connect = {
+            host = function()
+              return vim.fn.input("Host: ", "127.0.0.1")
+            end,
+            port = function()
+              return tonumber(vim.fn.input("Port: ", "5678"))
+            end,
+          },
         },
       }
     end,
