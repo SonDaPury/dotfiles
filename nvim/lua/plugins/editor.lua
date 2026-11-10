@@ -300,4 +300,20 @@ return {
 			enable_tailwind = true, -- Bật nhận diện class màu Tailwind CSS
 		},
 	},
+
+	---------------------------------------------------------------------
+	-- live-server-nvim cho HTML/CSS/Javascript
+	{
+		"ngtuonghy/live-server-nvim",
+		event = "VeryLazy",
+		build = ":LiveServerInstall",
+		opts = {
+			custom = {
+				"--port=5500",
+			},
+		},
+		-- config = function()
+		-- 	require("live-server-nvim").setup({})
+		-- end,
+	},
 }
